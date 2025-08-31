@@ -5,7 +5,7 @@ const fs = require("fs");
 
 // === CONFIG ===
 const COOKIES_PATH = "./cookies.json"; // FB cookies file
-const THREAD_ID = "1234567890123456";  // <-- butang imong GC thread ID
+const THREAD_ID = "8266164920164005";  // <-- butang imong GC thread ID
 const GC_URL = `https://www.facebook.com/messages/t/${THREAD_ID}`;
 
 // === Get Random Bible Verse ===
