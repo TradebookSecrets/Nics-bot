@@ -1,11 +1,12 @@
-import puppeteer from "puppeteer";
-import cron from "node-cron";
-import fetch from "node-fetch";
-import fs from "fs";
+const puppeteer = require("puppeteer");
+const cron = require("node-cron");
+const fetch = require("node-fetch");
+const fs = require("fs");
 
 // === CONFIG ===
-const COOKIES_PATH = "./cookies.json"; // FB cookies (exported)
-const GC_URL = "https://www.facebook.com/messages/t/YOUR_GC_THREAD_ID"; // Messenger GC link
+const COOKIES_PATH = "./cookies.json"; // FB cookies file
+const THREAD_ID = "1234567890123456";  // <-- butang imong GC thread ID
+const GC_URL = `https://www.facebook.com/messages/t/${THREAD_ID}`;
 
 // === Get Random Bible Verse ===
 async function getVerse() {
@@ -26,7 +27,7 @@ async function sendToGC() {
 
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"], // for Render
+    args: ["--no-sandbox", "--disable-setuid-sandbox"], // para mudagan sa Render
   });
   const page = await browser.newPage();
 
@@ -42,7 +43,7 @@ async function sendToGC() {
 
   try {
     await page.goto(GC_URL, { waitUntil: "networkidle2" });
-    await page.waitForSelector("div[aria-label='Message']", { timeout: 15000 });
+    await page.waitForSelector("div[aria-label='Message']", { timeout: 20000 });
     await page.click("div[aria-label='Message']");
     await page.keyboard.type(`📖 Daily Bible Verse:\n${verse}`, { delay: 50 });
     await page.keyboard.press("Enter");
@@ -61,4 +62,4 @@ cron.schedule("0 12 * * *", sendToGC, { timezone: "Asia/Manila" });
 cron.schedule("0 17 * * *", sendToGC, { timezone: "Asia/Manila" });
 cron.schedule("0 22 * * *", sendToGC, { timezone: "Asia/Manila" });
 
-console.log("📖 Messenger GC Bot running... Will send verses at 6AM, 12NN, 5PM, 10PM (Asia/Manila).");
+console.log("📖 Messenger GC Bot running... Scheduled at 6AM, 12NN, 5PM, 10PM (Asia/Manila).");
