@@ -1,4 +1,4 @@
-1const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer");
 const cron = require("node-cron");
 const fs = require("fs");
 const express = require("express");
