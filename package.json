@@ -1,11 +1,14 @@
 {
-  "name": "fb-gc-bot",
+  "name": "bible-bot",
   "version": "1.0.0",
+  "description": "Automatic Bible Verse Messenger GC Bot",
   "main": "bot.js",
-  "type": "module",
+  "scripts": {
+    "start": "node bot.js"
+  },
   "dependencies": {
-    "puppeteer": "^21.0.0",
-    "node-cron": "^3.0.2",
-    "node-fetch": "^3.3.2"
+    "puppeteer": "^21.5.2",
+    "node-cron": "^3.0.3",
+    "express": "^4.18.2"
   }
 }
