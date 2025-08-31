@@ -1,11 +1,11 @@
 const puppeteer = require("puppeteer");
 const cron = require("node-cron");
-const fetch = require("node-fetch");
 const fs = require("fs");
+const express = require("express");
 
 // === CONFIG ===
 const COOKIES_PATH = "./cookies.json"; // FB cookies file
-const THREAD_ID = "8266164920164005";  // <-- butang imong GC thread ID
+const THREAD_ID = "8266164920164005";  // <-- imong GC thread ID
 const GC_URL = `https://www.facebook.com/messages/t/${THREAD_ID}`;
 
 // === Get Random Bible Verse ===
@@ -27,11 +27,10 @@ async function sendToGC() {
 
   const browser = await puppeteer.launch({
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"], // para mudagan sa Render
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
   });
   const page = await browser.newPage();
 
-  // Load cookies
   if (fs.existsSync(COOKIES_PATH)) {
     const cookies = JSON.parse(fs.readFileSync(COOKIES_PATH));
     await page.setCookie(...cookies);
@@ -56,10 +55,14 @@ async function sendToGC() {
 }
 
 // === Schedule (Asia/Manila) ===
-// 6AM, 12NN, 5PM, 10PM
 cron.schedule("0 6 * * *", sendToGC, { timezone: "Asia/Manila" });
 cron.schedule("0 12 * * *", sendToGC, { timezone: "Asia/Manila" });
 cron.schedule("0 17 * * *", sendToGC, { timezone: "Asia/Manila" });
 cron.schedule("0 22 * * *", sendToGC, { timezone: "Asia/Manila" });
 
 console.log("📖 Messenger GC Bot running... Scheduled at 6AM, 12NN, 5PM, 10PM (Asia/Manila).");
+
+// === Keep-alive Express server (for Render) ===
+const app = express();
+app.get("/", (req, res) => res.send("Bible Bot is running"));
+app.listen(10000, () => console.log("✅ Keep-alive server running on port 10000"));
